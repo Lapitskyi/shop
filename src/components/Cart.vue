@@ -1,28 +1,27 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue';
+import { computed, inject} from 'vue';
+import { Store } from "@/store/store";
 
-const cartItems = ref(JSON.parse(localStorage.getItem('cart')) || []);
-
+const store = inject("store") as Store;
 
 const totalPrice = computed(() => {
-  return cartItems.value.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+  return store.state.cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
 });
 
 const removeItem = (id: number) => {
-  cartItems.value = cartItems.value.filter(item => item.id !== id);
-  localStorage.setItem('cart', JSON.stringify(cartItems.value));
+  store.removeFromCart(id);
 }
 </script>
 
 <template>
   <div class="flex flex-col gap-2 w-full h-full ">
-    <div v-if="cartItems.length > 0"
+    <div v-if="store.state.cart.length > 0"
          class="flex flex-col  w-full h-full">
 
       <div class="flex flex-col gap-2 w-full h-full">
         <div
             class="product"
-            v-for="product in cartItems"
+            v-for="product in store.state.cart"
             :key="product.id"
         >
           <img class="w-8 h-8" :src="product.image" alt="">

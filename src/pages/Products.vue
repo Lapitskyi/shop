@@ -17,10 +17,11 @@ type Product = {
 import Card from "@/components/Card.vue";
 
 import {getProducts, getProductsCategory} from "@/service/products.js";
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, inject} from "vue";
 import Pagination from "@/components/Pagination.vue";
 import Tabs from "@/components/Tabs/Tabs.vue";
 import Cart from "@/components/Cart.vue";
+import { Store } from "@/store/store";
 
 const activeTab = ref('all')
 const category = ref([])
@@ -29,8 +30,7 @@ const currentPage = ref(1)
 const pageSize = 10;
 const showModal = ref(false)
 
-const cartItems = ref(JSON.parse(localStorage.getItem('cart')) || []);
-
+const store = inject("store") as Store;
 
 const selectActiveTab = (tab: string) => {
   showModal.value = false;
@@ -50,21 +50,18 @@ const selectedProducts = computed(() => {
   return products.value.filter(p => p.category === activeTab.value)
 })
 
-const addItemCart = async (product: Product) => {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const existingProduct = cart.find(item => item.id === product.id);
-  if (await existingProduct) {
+
+const toggleProductInCart =  (product: Product) => {
+  const existingProduct = store.state.cart.find(item => item.id === product.id);
+  if (existingProduct) {
     showModal.value = true;
   } else {
-    cart.push({...product, quantity: 1});
+    store.addToCart({...product,quantity: 1 });
   }
-  localStorage.setItem('cart', JSON.stringify(cart));
-  cartItems.value = cart.map(item => item.id);
-}
+};
 
 const isProductInCart = (productId) => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  return cart.some(item => item.id === productId);
+  return store.state.cart.some(item => item.id === productId);
 };
 
 onMounted(async () => {
@@ -92,15 +89,15 @@ onMounted(async () => {
     />
   </section>
 
-  <section >
+  <section>
     <div class="products">
       <Card
           v-for="product in selectedProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
           :disabled="showModal"
-          @addToCart="addItemCart(product)"
+          @addToCart="toggleProductInCart(product)"
           :key="product.id"
           :product
-          :isProductInCart="cartItems.includes(products.id) || isProductInCart(product.id)"
+          :isProductInCart=" isProductInCart(product.id)"
       />
 
     </div>
@@ -124,9 +121,10 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-section{
+section {
   margin: 10px 0;
 }
+
 .products {
   display: grid;
   grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
