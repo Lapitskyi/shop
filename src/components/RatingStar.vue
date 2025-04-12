@@ -11,7 +11,7 @@ const {rating = 0} = defineProps<{ rating?: number, count?: number }>()
     <div class="flex gap-0.5 items-center">
       <RateStar v-for="star in 5"
                 :key="star"
-                class="h-5 w-5"
+                class="w-3 h-3 md:h-5 md:w-5"
                 :fill="star <= Math.floor(rating) ? 'gold' : 'lightgray'"
                 :half="star === Math.ceil(rating) && rating % 1 !== 0"
       />

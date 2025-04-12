@@ -4,7 +4,7 @@ defineProps<{ showModal: boolean, title?:string }>()
 
 <template>
   <div
-      class="boxShadow rounded-xl  fixed top-0 left-0 right-0 bottom-0 flex-col bg-white items-center justify-center m-auto flex z-50 w-[500px] h-[500px]"
+      class="boxShadow rounded-xl  fixed top-0 left-0 right-0 bottom-0 flex-col bg-white items-center justify-center m-auto flex z-50 w-full max-w-[500px] h-[500px]"
       v-if="showModal"
   >
     <div class="w-full flex justify-between items-center p-4">

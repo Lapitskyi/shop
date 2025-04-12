@@ -130,5 +130,18 @@ section {
   grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
   gap: 8px;
   justify-content: center;
+
+}
+
+@media screen and (max-width: 1024px) {
+  .products{
+    grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media screen and (max-width: 441px) {
+  .products{
+    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+  }
 }
 </style>

@@ -24,7 +24,7 @@ const toggleDescription = () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 w-full h-full  border border-gray-400 rounded p-3">
+  <div class="flex flex-col gap-2 max-w-[320px] w-full h-full  border border-gray-400 rounded p-3">
     <div class="flex w-full  flex-col items-center justify-center ">
       <img class="w-[150px] h-[150px] object-contain" :src="product.image"
            :alt="product.title">
